@@ -36,7 +36,7 @@ The target program runs normally while its console output is captured into the s
 
 ### ForceRedirect.exe
 
-**[Preview / Download](https://bit.ly/4x9XNpf)**
+**[Preview / Download](https://bit.ly/4x9XNpf)** (39.0 KB (39.936 byte))
 
 Opens the Google Drive preview page, where you can inspect the file before downloading it.
 
