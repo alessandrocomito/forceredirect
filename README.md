@@ -34,7 +34,7 @@ The target program runs normally while its console output is captured into the s
 
 ## Download
 
-### ForceRedirect.exe (16.820 byte)(39.0 KB (39.936 byte))
+### ForceRedirect.exe (39.0 KB (39.936 byte))
 
 **[Preview / Download Zip](https://bit.ly/4x9XNpf)** (16.4 KB (16.820 byte))
 
