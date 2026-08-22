@@ -1,5 +1,5 @@
 # ForceRedirect
-Version 1.0.1.0  
+Version 1.0.1.0 (2026-08-22)  
 
 **ForceRedirect** is a small, portable, native 64-bit C++ Windows utility that allows you to capture the console output of command-line programs that cannot be captured correctly using standard > redirection.
 
