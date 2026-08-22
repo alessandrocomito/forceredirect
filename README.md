@@ -29,7 +29,7 @@ The target program runs normally while its console output is captured into the s
 - Preserves Unicode characters
 - Handles console line breaks correctly
 - Portable and standalone
-- No installation required
+- No installation uired
 - Works from Command Prompt, batch files and PowerShell
 - Suitable for automated workflows
 - Does not require modifications to the target program
@@ -54,7 +54,7 @@ No installer is required.
 
 ## Requirements
 
-- Windows 10 version 1809 or later
+- Windows 10 x64 version 1809 or later
 - A Windows command-line program whose console output you want to capture
 
 ForceRedirect is a standalone portable executable.
