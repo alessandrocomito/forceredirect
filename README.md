@@ -1,5 +1,5 @@
 # ForceRedirect
-
+Version 1.0.1.0
 **ForceRedirect** is a small, portable, native 64-bit C++ Windows utility that allows you to capture the console output of command-line programs that cannot be captured correctly using standard > redirection.
 
 It uses the Windows ConPTY (Pseudo Console) API, available on Windows 10 version 1809 or later and Windows 11, to capture console output from programs that do not behave correctly with conventional stdout redirection.
@@ -40,7 +40,7 @@ The target program runs normally while its console output is captured into the s
 
 ### ForceRedirect.exe (39.0 KB (39.936 byte))
 
-**[Preview / Download Zip](https://bit.ly/4x9XNpf)** (16.4 KB (16.829 byte))
+**[Preview / Download Zip](https://bit.ly/4x9XNpf)** (16.4 KB (16.809 byte))
 
 Opens the Google Drive preview page, where you can inspect the file before downloading it.
 
