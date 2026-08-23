@@ -1,7 +1,7 @@
 # ForceRedirect
-Version 1.0.1.0 (2026-08-22)  
+Version 2.0.0.0 (2026-08-23)  
 
-**ForceRedirect** is a small, portable, native 64-bit C++ Windows utility that allows you to capture the console output of command-line programs that cannot be captured correctly using standard > redirection.
+**ForceRedirect** is a small, portable, native 64-bit C++ Windows utility that allows you to capture the console output of command-line programs that cannot be captured correctly using standard `>` redirection.
 
 It uses the Windows ConPTY (Pseudo Console) API, available on Windows 10 version 1809 or later and Windows 11, to capture console output from programs that do not behave correctly with conventional stdout redirection.
 
@@ -24,13 +24,14 @@ The target program runs normally while its console output is captured into the s
 ## Features
 
 - Captures console output using Windows ConPTY
+- Configurable buffer height with `-rows=N` parameter (default: 30000, max: 32767)
 - Works with existing Windows command-line programs
 - Supports the target program's command-line arguments
 - Handles large amounts of console output
 - Preserves Unicode characters
 - Handles console line breaks correctly
 - Portable and standalone
-- No installation uired
+- No installation required
 - Works from Command Prompt, batch files and PowerShell
 - Suitable for automated workflows
 - Does not require modifications to the target program
@@ -39,9 +40,9 @@ The target program runs normally while its console output is captured into the s
 
 ## Download
 
-### ForceRedirect.exe (39.0 KB (39.936 byte))
+### ForceRedirect.exe (40.0 KB (40.960 byte))
 
-**[Preview / Download Zip](https://bit.ly/4x9XNpf)** (16.4 KB (16.809 byte))
+**[Preview / Download Zip](https://bit.ly/4x9XNpf)** (16.6 KB (17.089 byte))
 
 Opens the Google Drive preview page, where you can inspect the file before downloading it.
 
@@ -64,29 +65,42 @@ ForceRedirect is a standalone portable executable.
 
 ## Command-Line Syntax
 
-    ForceRedirect.exe <target.exe> [target arguments...] <output_file>
+    ForceRedirect.exe [-rows=N] <target.exe> [target arguments...] <output_file>
 
-ForceRedirect requires at least two parameters:
+### Parameters
 
-- The **first parameter** is the executable to launch.
-- The **last parameter** is the output file.
-- Any parameters between the first and last parameters are passed directly to the target executable.
+- **`-rows=N`** *(Optional)*: Specifies the console buffer height (number of rows) allocated for ConPTY.
+  - **Default:** `30000` if omitted.
+  - **Maximum Limit:** `32767` (hard limit imposed by the Windows API `SHORT` coordinate structure). Any value greater than `32767` is automatically clamped to `32767`.
+- **`<target.exe>`**: The executable to launch.
+- **`[target arguments...]`** *(Optional)*: Any arguments passed directly to the target executable.
+- **`<output_file>`**: The output file where the captured console output will be written.
 
-ForceRedirect does not interpret or modify the intermediate parameters. Their number and meaning depend entirely on the target executable.
-
-### Example
-
-    ForceRedirect.exe program.exe --input input.flac --verbose output.txt
-
-In this example:
-
-- `program.exe` is the target executable.
-- `--input input.flac --verbose` are arguments belonging to `program.exe`.
-- `output.txt` is the output file created by ForceRedirect.
+ForceRedirect does not interpret or modify the target executable's arguments. Their number and meaning depend entirely on the target executable.
 
 ---
 
 ## Examples
+
+### Basic Usage & Optional -rows Parameter
+
+Specifying 1,000 buffer rows:
+
+    ForceRedirect.exe -rows=1000 flad_cli.exe file.flac output.txt
+
+Omitting `-rows` defaults to 30,000 rows. The following two commands are equivalent:
+
+    ForceRedirect.exe -rows=30000 flad_cli.exe file.flac output.txt
+    ForceRedirect.exe flad_cli.exe file.flac output.txt
+
+Passing additional target arguments:
+
+    ForceRedirect.exe program.exe --input input.flac --verbose output.txt
+
+In this example:
+- `program.exe` is the target executable.
+- `--input input.flac --verbose` are arguments belonging to `program.exe`.
+- `output.txt` is the output file created by ForceRedirect.
 
 ### FLAD
 
@@ -236,9 +250,13 @@ The behavior of individual programs may vary depending on how they produce their
 
 ### Syntax
 
-    ForceRedirect.exe <target.exe> [target arguments...] <output_file>
+    ForceRedirect.exe [-rows=N] <target.exe> [target arguments...] <output_file>
 
-### First parameter
+### Optional parameter
+
+- **`-rows=N`**: Number of buffer rows for ConPTY (Default: `30000`, Maximum: `32767`).
+
+### Target executable
 
 The executable to launch.
 
