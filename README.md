@@ -1,5 +1,5 @@
 # ForceRedirect
-Version 3.0 (2026-08-24)  
+Version 3.5 (2026-09-10)  
 
 **ForceRedirect** is a small, portable, native 64-bit C++ Windows utility that allows you to capture the console output of command-line programs that cannot be captured correctly using standard `>` redirection.
 
@@ -25,11 +25,14 @@ The target program runs normally while its console output is captured into the s
 
 - Captures console output using Windows ConPTY
 - Configurable buffer height with `-rows=N` parameter (default: 30000, max: 32767)
+- Optional preservation of ANSI/VT color sequences with the `-color` parameter (default: off)
 - Works with existing Windows command-line programs
 - Supports the target program's command-line arguments
 - Handles large amounts of console output
 - Preserves Unicode characters
 - Handles console line breaks correctly
+- Writes the output file progressively while the target program is running
+- Updates the output file approximately once per second
 - Portable and standalone
 - No installation required
 - Works from Command Prompt, batch files and PowerShell
@@ -40,9 +43,9 @@ The target program runs normally while its console output is captured into the s
 
 ## Download
 
-### ForceRedirect.exe (46.5 KB (47.616 byte))
+### ForceRedirect.exe (56.5 KB (57856 byte))
 
-**[Preview / Download Zip](https://bit.ly/4x9XNpf)** (20.5 KB (21.064 byte))
+**[Preview / Download Zip](https://bit.ly/4x9XNpf)** (25.5 KB (26137 byte))
 
 Opens the Google Drive preview page, where you can inspect the file before downloading it.
 
@@ -65,44 +68,84 @@ ForceRedirect is a standalone portable executable.
 
 ## Command-Line Syntax
 
-    ForceRedirect.exe [-rows=N] <target.exe> [target arguments...] <output_file>
+    ForceRedirect.exe [-rows=N] [-color] <target.exe> [target arguments...] <output_file>
+
+The optional `-rows=N` and `-color` parameters may be used independently or together.
 
 ### Parameters
 
 - **`-rows=N`** *(Optional)*: Specifies the console buffer height (number of rows) allocated for ConPTY.
   - **Default:** `30000` if omitted.
-  - **Maximum Limit:** `32767` (hard limit imposed by the Windows API `SHORT` coordinate structure). Any value greater than `32767` is automatically clamped to `32767`.
+  - **Maximum Limit:** `32767` (hard limit imposed by the Windows API `SHORT` coordinate structure).
+  - Any value greater than `32767` is automatically clamped to `32767`.
+
+- **`-color`** *(Optional)*: Preserves ANSI/VT color escape sequences in the output file.
+  - **Default:** disabled.
+  - If omitted, ANSI/VT color and terminal styling sequences are removed and the output contains clean plain text.
+  - If specified, color escape sequences are preserved in the captured output.
+
 - **`<target.exe>`**: The executable to launch.
+
 - **`[target arguments...]`** *(Optional)*: Any arguments passed directly to the target executable.
+
 - **`<output_file>`**: The output file where the captured console output will be written.
 
-ForceRedirect does not interpret or modify the target executable's arguments. Their number and meaning depend entirely on the target executable.
+ForceRedirect does not otherwise interpret or modify the target executable's arguments. Their number and meaning depend entirely on the target executable.
 
 ---
 
 ## Examples
 
-### Basic Usage & Optional -rows Parameter
+### Basic Usage
+
+The simplest form uses the default settings:
+
+    ForceRedirect.exe flad_cli.exe file.flac output.txt
+
+This is equivalent to:
+
+    ForceRedirect.exe -rows=30000 flad_cli.exe file.flac output.txt
+
+The default configuration is therefore:
+
+- Buffer: `30000` rows
+- Color: disabled
+
+### Using `-rows=N`
 
 Specifying 1,000 buffer rows:
 
     ForceRedirect.exe -rows=1000 flad_cli.exe file.flac output.txt
 
-Omitting `-rows` defaults to 30,000 rows. The following two commands are equivalent:
+### Using `-color`
 
-    ForceRedirect.exe -rows=30000 flad_cli.exe file.flac output.txt
-    ForceRedirect.exe flad_cli.exe file.flac output.txt
+Preserving ANSI/VT color sequences:
 
-Passing additional target arguments:
+    ForceRedirect.exe -color flad_cli.exe file.flac output.txt
+
+When `-color` is used without `-rows=`, the buffer size remains `30000` rows.
+
+### Using both optional parameters
+
+    ForceRedirect.exe -rows=100 -color flad_cli.exe file.flac output.txt
+
+The order of `-rows=N` and `-color` is not significant:
+
+    ForceRedirect.exe -color -rows=100 flad_cli.exe file.flac output.txt
+
+### Passing additional target arguments
 
     ForceRedirect.exe program.exe --input input.flac --verbose output.txt
 
 In this example:
+
 - `program.exe` is the target executable.
 - `--input input.flac --verbose` are arguments belonging to `program.exe`.
 - `output.txt` is the output file created by ForceRedirect.
 
-### FLAD
+---
+
+## FLAD
 
 `flad_cli.exe` is a practical example of a command-line program whose console output cannot be reliably captured using normal `>` redirection.
 
@@ -118,9 +161,13 @@ With ForceRedirect:
 
 the console output is captured in `output.txt`.
 
+The output file is also updated progressively while FLAD is running, making it possible for another program or script to inspect the captured output before FLAD has finished.
+
 This is the primary type of situation ForceRedirect is designed to solve.
 
-### tree.com — High-Volume Output Test
+---
+
+## tree.com — High-Volume Output Test
 
 Windows `tree.com` supports normal `>` redirection correctly, so it does **not** require ForceRedirect.
 
@@ -150,13 +197,17 @@ The test can verify that:
 
 ForceRedirect captures the console stream directly through ConPTY rather than relying on the visible scrollback history of the Command Prompt or PowerShell window.
 
-The captured output is written directly to the specified output file.
+The captured output is written to the specified output file and is updated progressively while the target program is running.
 
-This allows programs producing hundreds or thousands of lines to be captured without depending on the size of the visible console buffer.
+The file is refreshed approximately once per second and receives a final update when the target program terminates.
+
+This allows another process, script or user to inspect the captured output while the target program is still running.
 
 The output file is saved as UTF-8 text, allowing Unicode characters to be preserved.
 
-ANSI/VT color and terminal control sequences are removed, producing clean plain-text output suitable for text editors and automated processing.
+By default, ANSI/VT color and terminal control sequences are removed, producing clean plain-text output suitable for text editors and automated processing.
+
+When `-color` is specified, ANSI/VT color escape sequences are preserved in the output file.
 
 If the specified output file already exists, it is overwritten.
 
@@ -170,6 +221,11 @@ Example:
 
     @echo off
     ForceRedirect.exe flad_cli.exe input.flac output.txt
+
+Using both optional parameters:
+
+    @echo off
+    ForceRedirect.exe -rows=100 -color flad_cli.exe input.flac output.txt
 
 Another example:
 
@@ -220,6 +276,10 @@ Then run:
 
 Save console output that cannot be reliably captured using normal `>` redirection.
 
+### Monitor output during execution
+
+Allow scripts or other applications to inspect the captured output while the target program is still running.
+
 ### Integrate existing command-line tools
 
 Use an existing executable in an automated workflow without modifying the original program.
@@ -227,6 +287,10 @@ Use an existing executable in an automated workflow without modifying the origin
 ### Batch processing
 
 Capture output to files that can subsequently be processed by batch files or other utilities.
+
+### Preserve colored console output
+
+Use `-color` when ANSI/VT color sequences need to be retained in the captured output.
 
 ### PowerShell automation
 
@@ -246,17 +310,30 @@ It is not intended for graphical applications or programs whose output is primar
 
 The behavior of individual programs may vary depending on how they produce their console output.
 
+The `-color` option preserves ANSI/VT escape sequences in the output file; whether those sequences are displayed as actual colors depends on the application used to open or process the file.
+
 ---
 
 ## Quick Reference
 
 ### Syntax
 
-    ForceRedirect.exe [-rows=N] <target.exe> [target arguments...] <output_file>
+    ForceRedirect.exe [-rows=N] [-color] <target.exe> [target arguments...] <output_file>
 
-### Optional parameter
+### Optional parameters
 
-- **`-rows=N`**: Number of buffer rows for ConPTY (Default: `30000`, Maximum: `32767`).
+- **`-rows=N`**: Number of buffer rows for ConPTY. Default: `30000`. Maximum: `32767`.
+- **`-color`**: Preserve ANSI/VT color escape sequences. Default: disabled.
+
+### Defaults
+
+    ForceRedirect.exe <target.exe> [target arguments...] <output_file>
+
+is equivalent to using:
+
+    -rows=30000
+
+with color disabled.
 
 ### Target executable
 
@@ -285,3 +362,4 @@ It is designed to be small, portable, and easy to use.
 Freeware.
 
 Copyright (c) 2026 Alessandro Comito.
+```
