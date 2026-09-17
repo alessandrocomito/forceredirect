@@ -1,5 +1,5 @@
 # ForceRedirect
-Version 3.6 (2026-09-17)  
+Version 3.7 (2026-09-17)  
 
 **ForceRedirect** is a small, portable, native 64-bit C++ Windows utility that allows you to capture the console output of command-line programs that cannot be captured correctly using standard `>` redirection.
 
@@ -45,7 +45,7 @@ The target program runs normally while its console output is captured into the s
 
 ### ForceRedirect.exe (57.5 KB (58880 byte))
 
-**[Preview / Download Zip](https://bit.ly/4x9XNpf)** (25.8 KB (26.473 byte))
+**[Preview / Download Zip](https://bit.ly/4x9XNpf)** ((25.8 KB (26.497 byte))
 
 Opens the Google Drive preview page, where you can inspect the file before downloading it.
 
