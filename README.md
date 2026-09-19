@@ -1,5 +1,5 @@
 # ForceRedirect
-Version 3.7 (2026-09-17)  
+Version 3.8  
 
 **ForceRedirect** is a small, portable, native 64-bit C++ Windows utility that allows you to capture the console output of command-line programs that cannot be captured correctly using standard `>` redirection.
 
@@ -25,7 +25,7 @@ The target program runs normally while its console output is captured into the s
 
 - Captures console output using Windows ConPTY
 - Configurable buffer height with `-rows=N` parameter (default: 30000, max: 32767)
-- Optional preservation of ANSI/VT color sequences with the `-color` parameter (default: off)
+- Optional preservation of ANSI/VT color, bold, italic and underline sequences with the `-color` parameter (default: off)
 - Works with existing Windows command-line programs
 - Supports the target program's command-line arguments
 - Handles large amounts of console output
@@ -45,7 +45,7 @@ The target program runs normally while its console output is captured into the s
 
 ### ForceRedirect.exe (57.5 KB (58880 byte))
 
-**[Preview / Download Zip](https://bit.ly/4x9XNpf)** ((25.8 KB (26.497 byte))
+**[Preview / Download Zip](https://bit.ly/4x9XNpf)** ((25.7 KB (26.410 byte))
 
 Opens the Google Drive preview page, where you can inspect the file before downloading it.
 
@@ -79,10 +79,10 @@ The optional `-rows=N` and `-color` parameters may be used independently or toge
   - **Maximum Limit:** `32767` (hard limit imposed by the Windows API `SHORT` coordinate structure).
   - Any value greater than `32767` is automatically clamped to `32767`.
 
-- **`-color`** *(Optional)*: Preserves ANSI/VT color escape sequences in the output file.
+- **`-color`** *(Optional)*: Preserves ANSI/VT color, bold, italic and underline escape sequences in the output file.
   - **Default:** disabled.
   - If omitted, ANSI/VT color and terminal styling sequences are removed and the output contains clean plain text.
-  - If specified, color escape sequences are preserved in the captured output.
+  - If specified, color, bold, italic and underline escape sequences are preserved in the captured output.
 
 - **`<target.exe>`**: The executable to launch.
 
@@ -119,7 +119,7 @@ Specifying 1,000 buffer rows:
 
 ### Using `-color`
 
-Preserving ANSI/VT color sequences:
+Preserving ANSI/VT color, bold, italic and underline sequences:
 
     ForceRedirect.exe -color flad_cli.exe file.flac output.txt
 
@@ -207,7 +207,7 @@ The output file is saved as UTF-8 text, allowing Unicode characters to be preser
 
 By default, ANSI/VT color and terminal control sequences are removed, producing clean plain-text output suitable for text editors and automated processing.
 
-When `-color` is specified, ANSI/VT color escape sequences are preserved in the output file.
+When `-color` is specified, ANSI/VT color, bold, italic and underline escape sequences are preserved in the output file.
 
 If the specified output file already exists, it is overwritten.
 
@@ -288,9 +288,9 @@ Use an existing executable in an automated workflow without modifying the origin
 
 Capture output to files that can subsequently be processed by batch files or other utilities.
 
-### Preserve colored console output
+### Preserve colored and styled console output
 
-Use `-color` when ANSI/VT color sequences need to be retained in the captured output.
+Use `-color` when ANSI/VT color, bold, italic or underline sequences need to be retained in the captured output.
 
 ### PowerShell automation
 
@@ -310,7 +310,7 @@ It is not intended for graphical applications or programs whose output is primar
 
 The behavior of individual programs may vary depending on how they produce their console output.
 
-The `-color` option preserves ANSI/VT escape sequences in the output file; whether those sequences are displayed as actual colors depends on the application used to open or process the file.
+The `-color` option preserves ANSI/VT color, bold, italic and underline escape sequences in the output file; whether those sequences are displayed as actual colors and styling depends on the application used to open or process the file.
 
 ---
 
@@ -323,7 +323,7 @@ The `-color` option preserves ANSI/VT escape sequences in the output file; wheth
 ### Optional parameters
 
 - **`-rows=N`**: Number of buffer rows for ConPTY. Default: `30000`. Maximum: `32767`.
-- **`-color`**: Preserve ANSI/VT color escape sequences. Default: disabled.
+- **`-color`**: Preserve ANSI/VT color, bold, italic and underline escape sequences. Default: disabled.
 
 ### Defaults
 
